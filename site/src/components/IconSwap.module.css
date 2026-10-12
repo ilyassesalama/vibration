@@ -1,0 +1,19 @@
+.swap {
+  display: inline-grid;
+  flex: none;
+}
+
+.swap > span {
+  grid-area: 1 / 1;
+  display: grid;
+  place-items: center;
+  transition-property: opacity, scale, filter;
+  transition-duration: 300ms;
+  transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
+.swap > [data-shown="false"] {
+  opacity: 0;
+  scale: 0.25;
+  filter: blur(4px);
+}

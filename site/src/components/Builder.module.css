@@ -11,6 +11,7 @@
 
 .toolbar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 10px;
   min-width: 0;
@@ -20,7 +21,7 @@
 .presets {
   display: flex;
   gap: 6px;
-  flex: 1;
+  flex: 1 1 260px;
   min-width: 0;
   padding-right: 24px;
   overflow-x: auto;
@@ -51,7 +52,7 @@
 }
 
 .preset:active {
-  transform: scale(0.95);
+  transform: scale(0.96);
 }
 
 .play {
@@ -201,7 +202,7 @@
   height: 18px;
   margin-top: 6px;
   font-family: var(--font-code);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   color: var(--ink-3);
   font-variant-numeric: tabular-nums;
 }
@@ -254,13 +255,18 @@
   accent-color: var(--ink);
 }
 
-.remove {
-  justify-self: start;
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.action {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   height: 36px;
-  margin-top: 2px;
   padding: 0 14px 0 12px;
   border-radius: 999px;
   background: var(--well);
@@ -270,18 +276,21 @@
   transition: color 150ms var(--ease-out), transform 120ms var(--ease-out);
 }
 
-.remove:active {
+.action:active {
   transform: scale(0.96);
 }
 
 @media (hover: hover) and (pointer: fine) {
+  .action:hover {
+    color: var(--ink);
+  }
+
   .remove:hover {
     color: var(--error);
   }
 }
 
 .hint {
-  padding: 4px 6px;
   font-size: 0.92rem;
   color: var(--ink-2);
 }

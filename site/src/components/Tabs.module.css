@@ -1,13 +1,7 @@
 .tabs {
   display: flex;
+  flex-wrap: wrap;
   gap: 4px;
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scrollbar-width: none;
-}
-
-.tabs::-webkit-scrollbar {
-  display: none;
 }
 
 .tab {
@@ -28,7 +22,7 @@
 }
 
 .tab:active {
-  transform: scale(0.95);
+  transform: scale(0.96);
 }
 
 @media (hover: hover) and (pointer: fine) {

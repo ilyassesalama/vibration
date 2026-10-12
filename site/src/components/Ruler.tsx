@@ -7,7 +7,6 @@ import styles from "./Ruler.module.css";
 const STEPS = 20;
 const START = 8;
 
-/** A ruler you drag along. Every step it passes plays a tick: several haptics in one gesture, iPhone included. */
 export function Ruler() {
   const track = useRef<HTMLDivElement>(null);
   const ticks = useRef<(HTMLSpanElement | null)[]>([]);

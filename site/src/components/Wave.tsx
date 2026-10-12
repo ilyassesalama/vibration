@@ -7,7 +7,6 @@ export interface WaveHandle {
   play(): void;
 }
 
-/** A pattern drawn as a vibration trace. `play()` lights it up in real time. */
 export function Wave({ pattern, ref }: { pattern: Pattern; ref?: Ref<WaveHandle> }) {
   const lit = useRef<SVGSVGElement>(null);
   const path = useMemo(() => tracePath(pattern, 200, 40), [pattern]);

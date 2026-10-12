@@ -8,8 +8,7 @@ const PERIOD = 7;
 
 export const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 
-/** How long a pattern's trace takes to play, in ms: the pattern itself, or the minimum span. */
-export const traceSpan = (pattern: Pattern) => Math.max(length(pattern), MIN_SPAN);
+const traceSpan = (pattern: Pattern) => Math.max(length(pattern), MIN_SPAN);
 
 /**
  * An SVG path that draws a pattern like a vibration trace: a wave whose amplitude is each
@@ -59,6 +58,7 @@ export function playTrace(lit: Element, pattern: Pattern): void {
 /**
  * Shakes an element in step with a pattern: the visible stand-in for the vibration on
  * screens without a motor. Keyframes every ~16ms, displacement scaled by intensity.
+ * Animates `translate`, not `transform`, so the element's own press scale still applies.
  */
 export function jolt(element: Element, pattern: Pattern, strength = 2.2): void {
   if (reducedMotion.matches) return;
@@ -68,8 +68,8 @@ export function jolt(element: Element, pattern: Pattern, strength = 2.2): void {
   for (let t = 0; t <= total; t += 16) {
     const active = timing.find((s) => t >= s.start && t < s.start + Math.max(s.duration, 24));
     const x = active ? Math.sin(t * 0.55) * strength * (0.4 + 0.6 * active.intensity) : 0;
-    frames.push({ transform: `translateX(${x.toFixed(2)}px)`, offset: Math.min(1, t / total) });
+    frames.push({ translate: `${x.toFixed(2)}px 0`, offset: Math.min(1, t / total) });
   }
-  frames.push({ transform: "translateX(0)", offset: 1 });
+  frames.push({ translate: "0 0", offset: 1 });
   element.animate(frames, { duration: total, easing: "linear" });
 }

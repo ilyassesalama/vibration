@@ -6,7 +6,6 @@ import { jolt } from "../lib/wave";
 import styles from "./PresetKey.module.css";
 import { Wave, type WaveHandle } from "./Wave";
 
-/** A preset as a key: its name, length and trace. Tapping it plays the haptic. */
 export function PresetKey({ name, size }: { name: PresetName; size: "large" | "small" }) {
   const key = useRef<HTMLButtonElement>(null);
   const wave = useRef<WaveHandle>(null);

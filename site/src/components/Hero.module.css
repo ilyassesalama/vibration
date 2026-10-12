@@ -55,7 +55,7 @@
 }
 
 .install:active {
-  transform: scale(0.97);
+  transform: scale(0.96);
 }
 
 .secondary {
@@ -99,6 +99,7 @@
 }
 
 .sound {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -111,6 +112,13 @@
   transition: background 150ms var(--ease-out), color 150ms var(--ease-out);
 }
 
+/* 44px touch target. */
+.sound::after {
+  content: "";
+  position: absolute;
+  inset: -6px 0;
+}
+
 .sound[aria-pressed="true"] {
   background: var(--well);
   color: var(--ink);
@@ -118,7 +126,7 @@
 
 .keys {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
 }
 

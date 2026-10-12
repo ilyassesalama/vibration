@@ -1,5 +1,5 @@
-import { Play, Trash } from "@phosphor-icons/react";
-import { type PointerEvent, useMemo, useRef, useState } from "react";
+import { Play, Plus, Trash } from "@phosphor-icons/react";
+import { type KeyboardEvent, type PointerEvent, useMemo, useRef, useState } from "react";
 import { haptic, type Pattern, type PresetName, presets, type Pulse } from "vibration";
 import { feedback, segments } from "../lib/feedback";
 import { titleCase, toneStyle } from "../lib/presets";
@@ -17,6 +17,7 @@ interface Block {
 const STEP = 5;
 const MIN_DURATION = 5;
 const NEW_DURATION = 40;
+const NEW_GAP = 60;
 const FADE = 160;
 const snap = (ms: number) => Math.round(ms / STEP) * STEP;
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
@@ -50,7 +51,6 @@ interface Drag {
   start: number;
   duration: number;
   msPerPx: number;
-  moved: boolean;
 }
 
 export function Builder() {
@@ -98,7 +98,7 @@ export function Builder() {
     if (!track.current) return;
     event.currentTarget.setPointerCapture(event.pointerId);
     const width = track.current.getBoundingClientRect().width;
-    drag.current = { id: block.id, mode, x: event.clientX, start: block.start, duration: block.duration, msPerPx: span / width, moved: false };
+    drag.current = { id: block.id, mode, x: event.clientX, start: block.start, duration: block.duration, msPerPx: span / width };
     setFrozenSpan(span);
     if (block.id !== selectedId) {
       haptic("selection");
@@ -109,9 +109,7 @@ export function Builder() {
   const moveDrag = (event: PointerEvent<HTMLElement>) => {
     const current = drag.current;
     if (!current) return;
-    const dx = event.clientX - current.x;
-    if (Math.abs(dx) > 2) current.moved = true;
-    const delta = dx * current.msPerPx;
+    const delta = (event.clientX - current.x) * current.msPerPx;
     const { min, max } = room(current.id);
     if (current.mode === "move") {
       update(current.id, { start: clamp(snap(current.start + delta), min, max - current.duration) });
@@ -125,7 +123,6 @@ export function Builder() {
     setFrozenSpan(null);
   };
 
-  /** Tapping empty track adds a pulse there, if it fits. */
   const addAt = (event: PointerEvent<HTMLDivElement>) => {
     if (!track.current || event.target !== event.currentTarget) return;
     const box = track.current.getBoundingClientRect();
@@ -136,11 +133,30 @@ export function Builder() {
     const start = Math.max(at, previous ? previous.start + previous.duration : 0);
     const duration = Math.min(NEW_DURATION, (next?.start ?? Number.POSITIVE_INFINITY) - start);
     if (duration < 10) return;
+    insert(start, duration);
+  };
+
+  const addAfter = () => {
+    const last = blocks.at(-1);
+    insert(last ? snap(last.start + last.duration + NEW_GAP) : 0, NEW_DURATION);
+  };
+
+  const insert = (start: number, duration: number) => {
     const block = { id: nextId(blocks), start, duration, intensity: 1 };
     setPreset(null);
     setBlocks([...blocks, block].sort((a, b) => a.start - b.start));
     setSelectedId(block.id);
     haptic("selection");
+  };
+
+  const onBlockKey = (event: KeyboardEvent, block: Block) => {
+    if (event.key === "Delete" || event.key === "Backspace") return remove();
+    const direction = event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;
+    if (!direction) return;
+    event.preventDefault();
+    const { min, max } = room(block.id);
+    const delta = direction * (event.shiftKey ? 50 : 10);
+    update(block.id, { start: clamp(snap(block.start + delta), min, max - block.duration) });
   };
 
   const remove = () => {
@@ -156,7 +172,6 @@ export function Builder() {
     if (!pattern.length) return;
     feedback(pattern);
     if (reducedMotion.matches || !track.current) return;
-    // A playhead sweeps the timeline in real time, so the timing is visible too.
     const distance = (track.current.clientWidth * end) / span;
     playhead.current?.animate(
       [
@@ -211,9 +226,8 @@ export function Builder() {
               role="button"
               tabIndex={0}
               aria-label={`Pulse at ${block.start}ms, ${block.duration}ms long, intensity ${Math.round(block.intensity * 100)}%`}
-              onKeyDown={(event) => {
-                if (event.key === "Delete" || event.key === "Backspace") remove();
-              }}
+              aria-keyshortcuts="ArrowLeft ArrowRight Delete"
+              onKeyDown={(event) => onBlockKey(event, block)}
               onFocus={() => setSelectedId(block.id)}
             >
               <span className={styles.body}>
@@ -234,40 +248,50 @@ export function Builder() {
       </div>
 
       <div className={styles.lower}>
-        {selected ? (
-          <div className={styles.controls}>
-            <label className={styles.slider}>
-              <span>Duration</span>
-              <input
-                type="range"
-                min={MIN_DURATION}
-                max={Math.max(MIN_DURATION, Math.min(1000, room(selected.id).max - selected.start))}
-                step={STEP}
-                value={selected.duration}
-                onChange={(event) => update(selected.id, { duration: Number(event.target.value) })}
-              />
-              <output>{selected.duration}ms</output>
-            </label>
-            <label className={styles.slider}>
-              <span>Intensity</span>
-              <input
-                type="range"
-                min={0.05}
-                max={1}
-                step={0.05}
-                value={selected.intensity}
-                onChange={(event) => update(selected.id, { intensity: Number(event.target.value) })}
-              />
-              <output>{Math.round(selected.intensity * 100)}%</output>
-            </label>
-            <button type="button" className={styles.remove} onClick={remove}>
-              <Trash size={16} weight="bold" />
-              Remove pulse
+        <div className={styles.controls}>
+          {selected ? (
+            <>
+              <label className={styles.slider}>
+                <span>Duration</span>
+                <input
+                  type="range"
+                  min={MIN_DURATION}
+                  max={Math.max(MIN_DURATION, Math.min(1000, room(selected.id).max - selected.start))}
+                  step={STEP}
+                  value={selected.duration}
+                  onChange={(event) => update(selected.id, { duration: Number(event.target.value) })}
+                />
+                <output>{selected.duration}ms</output>
+              </label>
+              <label className={styles.slider}>
+                <span>Intensity</span>
+                <input
+                  type="range"
+                  min={0.05}
+                  max={1}
+                  step={0.05}
+                  value={selected.intensity}
+                  onChange={(event) => update(selected.id, { intensity: Number(event.target.value) })}
+                />
+                <output>{Math.round(selected.intensity * 100)}%</output>
+              </label>
+            </>
+          ) : (
+            <p className={styles.hint}>No pulses yet. Tap the timeline or add one.</p>
+          )}
+          <div className={styles.actions}>
+            <button type="button" className={styles.action} onClick={addAfter}>
+              <Plus size={16} weight="bold" />
+              Add pulse
             </button>
+            {selected && (
+              <button type="button" className={`${styles.action} ${styles.remove}`} onClick={remove}>
+                <Trash size={16} weight="bold" />
+                Remove pulse
+              </button>
+            )}
           </div>
-        ) : (
-          <p className={styles.hint}>Tap the timeline to add a pulse.</p>
-        )}
+        </div>
 
         <CodeBlock code={pattern.length ? toCode(pattern) : "haptic([]);"} />
       </div>

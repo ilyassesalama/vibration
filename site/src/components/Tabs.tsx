@@ -18,7 +18,6 @@ export function Tabs<T extends string>({ label, options, value, onChange }: Tabs
     onChange(next);
   };
 
-  // Arrow keys move between tabs, as in native tab lists.
   const onKeyDown = (event: KeyboardEvent) => {
     const index = options.findIndex((option) => option.value === value);
     const step = event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;

@@ -53,7 +53,6 @@ const notes: Record<HapticEngine, string> = {
   none: "This browser can't vibrate. Try Chrome on Android or Safari on iPhone.",
 };
 
-/** What this device does with a tap, in one sentence. */
 export const deviceNote = desktop
   ? "There's no vibration motor in this computer. Turn on sound, or open the page on your phone."
   : notes[effectiveEngine];

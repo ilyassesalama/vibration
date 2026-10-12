@@ -1,7 +1,8 @@
 import { Check, Copy } from "@phosphor-icons/react";
-import { type ReactNode, useEffect, useRef, useState } from "react";
-import { haptic } from "vibration";
+import type { CSSProperties, ReactNode } from "react";
+import { useCopy } from "../lib/useCopy";
 import styles from "./CodeBlock.module.css";
+import { IconSwap } from "./IconSwap";
 
 const TOKENS =
   /(\/\/.*$|"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\\]|\\.)*`)|\b(import|from|export|function|return|const|let|await|async)\b|(<\/?[a-zA-Z][\w-]*|\/?>)|\b(\d+(?:\.\d+)?)\b/gm;
@@ -27,31 +28,25 @@ function highlight(code: string): ReactNode[] {
 }
 
 export function CodeBlock({ code, prompt = false }: { code: string; prompt?: boolean }) {
-  const [copied, setCopied] = useState(false);
-  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
-  useEffect(() => () => clearTimeout(timer.current), []);
-
-  const copy = async () => {
-    haptic("light");
-    try {
-      await navigator.clipboard.writeText(code);
-      setCopied(true);
-      clearTimeout(timer.current);
-      timer.current = setTimeout(() => setCopied(false), 1400);
-    } catch {
-      // Clipboard access can be denied; the code is still selectable.
-    }
-  };
-
+  const [copied, copy] = useCopy(code);
   return (
     <div className={styles.block}>
       <pre className={styles.code}>
-        {prompt && <span className={styles.prompt}>$ </span>}
-        <code>{highlight(code)}</code>
+        <code>
+          {code.split("\n").map((line, index) => (
+            <span key={index} className={styles.line} style={{ "--hang": `${line.length - line.trimStart().length + 2}ch` } as CSSProperties}>
+              {prompt && index === 0 && <span className={styles.prompt}>$ </span>}
+              {highlight(line)}
+            </span>
+          ))}
+        </code>
       </pre>
-      <button type="button" className={styles.copy} onClick={copy} aria-label={copied ? "Copied" : "Copy code"}>
-        {copied ? <Check size={16} weight="bold" /> : <Copy size={16} weight="bold" />}
+      <button type="button" className={styles.copy} onClick={copy} aria-label="Copy code">
+        <IconSwap on={copied} onIcon={<Check size={16} weight="bold" />} offIcon={<Copy size={16} weight="bold" />} />
       </button>
+      <span className="sr-only" role="status">
+        {copied ? "Copied" : ""}
+      </span>
     </div>
   );
 }

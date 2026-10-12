@@ -1,9 +1,10 @@
 import { Check, Copy, SpeakerHigh, SpeakerSlash } from "@phosphor-icons/react";
-import { useEffect, useRef, useState } from "react";
-import { haptic, type PresetName } from "vibration";
+import type { PresetName } from "vibration";
 import { deviceNote } from "../lib/feedback";
 import { useSound } from "../lib/sound";
+import { useCopy } from "../lib/useCopy";
 import styles from "./Hero.module.css";
+import { IconSwap } from "./IconSwap";
 import { PresetKey } from "./PresetKey";
 
 const PAD: PresetName[] = ["success", "nudge", "error", "buzz"];
@@ -30,29 +31,19 @@ export function Hero() {
 }
 
 function InstallPill() {
-  const [copied, setCopied] = useState(false);
-  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
-  useEffect(() => () => clearTimeout(timer.current), []);
-
-  const copy = async () => {
-    haptic("light");
-    try {
-      await navigator.clipboard.writeText(INSTALL);
-      setCopied(true);
-      clearTimeout(timer.current);
-      timer.current = setTimeout(() => setCopied(false), 1400);
-    } catch {
-      // Clipboard access can be denied; the command stays visible.
-    }
-  };
-
+  const [copied, copy] = useCopy(INSTALL);
   return (
-    <button type="button" className={styles.install} onClick={copy} aria-label={copied ? "Copied" : `Copy ${INSTALL}`}>
-      <code>
-        <span className={styles.prompt}>$</span> {INSTALL}
-      </code>
-      {copied ? <Check size={18} weight="bold" /> : <Copy size={18} weight="bold" />}
-    </button>
+    <>
+      <button type="button" className={styles.install} onClick={copy} aria-label={`Copy ${INSTALL}`}>
+        <code>
+          <span className={styles.prompt}>$</span> {INSTALL}
+        </code>
+        <IconSwap on={copied} onIcon={<Check size={18} weight="bold" />} offIcon={<Copy size={18} weight="bold" />} />
+      </button>
+      <span className="sr-only" role="status">
+        {copied ? "Copied" : ""}
+      </span>
+    </>
   );
 }
 
@@ -69,7 +60,7 @@ function Pad() {
           onClick={() => setSound(!sound)}
           aria-label={sound ? "Turn sound off" : "Turn sound on"}
         >
-          {sound ? <SpeakerHigh size={18} weight="bold" /> : <SpeakerSlash size={18} weight="bold" />}
+          <IconSwap on={sound} onIcon={<SpeakerHigh size={18} weight="bold" />} offIcon={<SpeakerSlash size={18} weight="bold" />} />
           Sound
         </button>
       </div>

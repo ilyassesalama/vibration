@@ -1,4 +1,4 @@
-/* The copy button has its own column, so long lines scroll beside it instead of under it. */
+/* The copy button has its own column, so long lines wrap beside it instead of under it. */
 .block {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -11,11 +11,19 @@
 .code {
   margin: 0;
   padding: 16px 8px 16px 18px;
-  overflow-x: auto;
   font-size: 0.82rem;
   line-height: 1.75;
   tab-size: 2;
-  scrollbar-width: thin;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Hanging indent: a wrapped line continues 2ch past its own indentation. */
+.line {
+  display: block;
+  min-height: 1lh;
+  padding-inline-start: var(--hang);
+  text-indent: calc(var(--hang) * -1);
 }
 
 .prompt {
@@ -25,6 +33,7 @@
 }
 
 .copy {
+  position: relative;
   margin: 10px 10px 0 0;
   display: grid;
   place-items: center;
@@ -35,8 +44,15 @@
   transition: background 150ms var(--ease-out), color 150ms var(--ease-out), transform 120ms var(--ease-out);
 }
 
+/* 44px touch target. */
+.copy::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+}
+
 .copy:active {
-  transform: scale(0.92);
+  transform: scale(0.96);
 }
 
 @media (hover: hover) and (pointer: fine) {
