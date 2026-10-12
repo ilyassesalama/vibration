@@ -16,8 +16,6 @@ export default defineConfig(({ command }) => {
   const port = 5173;
   const host = command === "serve" ? lanAddress() : null;
   return {
-    // GitHub Pages serves the site from ilyassesalama.github.io/vibration/.
-    base: "/vibration/",
     plugins: [react()],
     server: { port, strictPort: true },
     define: { __LAN_URL__: JSON.stringify(host ? `http://${host}:${port}` : null) },

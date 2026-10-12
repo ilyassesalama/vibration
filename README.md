@@ -3,9 +3,9 @@
 Haptic feedback for the mobile web. One function vibrates Android phones and iPhones,
 including iOS 26.5 and later, where other web haptics stopped working.
 
-**[Try it on your phone →](https://ilyassesalama.github.io/vibration/)**
+**[Try it on your phone →](https://vibration.ilyasse.dev)**
 
-[![The vibration demo site: tap a preset to feel it](https://raw.githubusercontent.com/ilyassesalama/vibration/main/site/public/og.png)](https://ilyassesalama.github.io/vibration/)
+[![The vibration demo site: tap a preset to feel it](https://raw.githubusercontent.com/ilyassesalama/vibration/main/site/public/og.png)](https://vibration.ilyasse.dev)
 
 - **One call.** `haptic("success")` from any tap handler, with nothing to set up or mount.
 - **iPhone support.** Taptic ticks on iOS 18 and later, including 26.5+.
@@ -61,7 +61,7 @@ haptic([
 ]);
 ```
 
-The [demo site](https://ilyassesalama.github.io/vibration/) has a pattern composer that writes this code
+The [demo site](https://vibration.ilyasse.dev) has a pattern composer that writes this code
 for you.
 
 ### Sliders and drags
