@@ -9,7 +9,7 @@ const MIN_ON = 6;
  * Flattens pulses into the alternating on/off list `navigator.vibrate` takes
  * (index 0 is "on"), emulating intensity with pulse-width modulation.
  */
-export function toVibrationPattern(pulses: readonly ResolvedPulse[]): number[] {
+function toVibrationPattern(pulses: readonly ResolvedPulse[]): number[] {
   const pattern: number[] = [];
   const push = (on: boolean, ms: number) => {
     if (ms <= 0) return;

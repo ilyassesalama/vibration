@@ -56,12 +56,6 @@ const surfaces = new WeakMap<EventTarget, Surface>();
 let drag: Drag | null = null;
 let installed = false;
 
-/**
- * Lets `haptic()` play ticks while a finger drags across `element`. Touches that start on
- * it go to an invisible switch on top of it; pointer and touch events still reach your
- * handlers, with `event.target` set to the element under the finger. Taps on it don't
- * produce `click` events, and it doesn't scroll the page. Returns a function that undoes it.
- */
 export function attachDragSurface(element: HTMLElement): () => void {
   if (!installed) install();
 
@@ -95,10 +89,7 @@ export function attachDragSurface(element: HTMLElement): () => void {
   };
 }
 
-/**
- * Called by `haptic()`. Returns null when no drag is in progress, otherwise whether a tick
- * will play for it.
- */
+/** Null when no drag is in progress, otherwise whether a tick will play for it. */
 export function requestDragTick(): boolean | null {
   if (!drag) return null;
   if (performance.now() - drag.startedAt < HOLD) return false;

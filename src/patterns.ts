@@ -9,7 +9,6 @@ export interface Pulse {
 
 export type Pattern = readonly Pulse[];
 
-/** A pulse with every field resolved. */
 export interface ResolvedPulse {
   duration: number;
   intensity: number;
@@ -17,7 +16,6 @@ export interface ResolvedPulse {
 }
 
 export const presets = {
-  // Notifications
   success: [
     { duration: 28, intensity: 0.55 },
     { delay: 70, duration: 42, intensity: 1 },
@@ -31,15 +29,12 @@ export const presets = {
     { delay: 45, duration: 45, intensity: 0.85 },
     { delay: 45, duration: 60, intensity: 1 },
   ],
-  // Impacts
   light: [{ duration: 14, intensity: 0.45 }],
   medium: [{ duration: 22, intensity: 0.7 }],
   heavy: [{ duration: 32, intensity: 1 }],
   soft: [{ duration: 40, intensity: 0.4 }],
   rigid: [{ duration: 12, intensity: 1 }],
-  // Selection
   selection: [{ duration: 8, intensity: 0.35 }],
-  // Expressive
   nudge: [
     { duration: 70, intensity: 0.85 },
     { delay: 90, duration: 45, intensity: 0.35 },

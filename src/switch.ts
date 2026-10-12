@@ -18,7 +18,7 @@ let label: HTMLLabelElement | undefined;
 let generation = 0;
 
 /** Times, in ms from the start, at which to tick for the given pulses. */
-export function tickTimes(pulses: readonly ResolvedPulse[]): number[] {
+function tickTimes(pulses: readonly ResolvedPulse[]): number[] {
   const times: number[] = [];
   let start = 0;
   for (const { delay, duration, intensity } of pulses) {

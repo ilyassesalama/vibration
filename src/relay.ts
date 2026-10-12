@@ -88,7 +88,6 @@ export function installRelay(): void {
   for (const type of RETARGETED) addEventListener(type, retarget, options);
 }
 
-/** Called by `haptic()`. Returns whether a tick will play for the current tap. */
 export function requestRelayHaptic(): boolean {
   if (dispatching) {
     requested = true;

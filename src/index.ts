@@ -45,7 +45,7 @@ export const engine: HapticEngine = detectEngine();
 if (engine === "ios-relay") installRelay();
 
 /**
- * Plays haptic feedback. Returns whether it will be felt (as far as the browser can tell).
+ * Plays haptic feedback. Returns whether it will be felt.
  *
  * Call it from the handler of a tap (`click`, `pointerdown`, `pointerup`, `touchend`).
  * Android also allows it at any time after the first tap. iOS plays a single tick per
