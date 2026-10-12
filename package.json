@@ -1,0 +1,56 @@
+{
+  "name": "vibration",
+  "version": "0.1.1",
+  "description": "Haptic feedback for the mobile web. Vibrates Android phones and iPhones (including iOS 26.5+) from any tap handler.",
+  "keywords": [
+    "haptics",
+    "haptic",
+    "vibration",
+    "vibrate",
+    "taptic",
+    "ios",
+    "android",
+    "safari",
+    "feedback",
+    "mobile"
+  ],
+  "license": "MIT",
+  "author": "ilyassesalama",
+  "homepage": "https://ilyassesalama.github.io/vibration/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ilyassesalama/vibration.git"
+  },
+  "bugs": "https://github.com/ilyassesalama/vibration/issues",
+  "packageManager": "pnpm@12.9.1",
+  "type": "module",
+  "sideEffects": [
+    "./dist/index.js"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "typecheck": "pnpm build && pnpm --filter site typecheck",
+    "dev": "pnpm build && pnpm --filter site dev",
+    "site:build": "pnpm build && pnpm --filter site build",
+    "prepublishOnly": "pnpm build"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  }
+}

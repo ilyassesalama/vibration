@@ -1,0 +1,94 @@
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin-top: 28px;
+}
+
+.card {
+  display: grid;
+  gap: 28px;
+  min-width: 0;
+  padding: 18px;
+  border-radius: calc(var(--r-card) + 8px);
+  background: var(--surface);
+  box-shadow: var(--shadow), 0 0 0 1px var(--line);
+}
+
+.step {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+
+.step h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.number {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--on-ink);
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.api {
+  padding: 18px 4px;
+}
+
+.api h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.api dl {
+  margin: 12px 0 0;
+}
+
+.api dl > div {
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+}
+
+.api dl > div:last-child {
+  padding-bottom: 0;
+}
+
+.api dt code {
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.api dd {
+  margin: 4px 0 0;
+  font-size: 0.94rem;
+  color: var(--ink-2);
+}
+
+@media (min-width: 900px) {
+  .grid {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: 40px;
+    align-items: start;
+  }
+
+  .card {
+    padding: 22px;
+  }
+
+  .api {
+    padding-top: 22px;
+  }
+}

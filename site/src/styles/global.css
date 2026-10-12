@@ -1,0 +1,232 @@
+@import "@fontsource/open-runde/400.css";
+@import "@fontsource/open-runde/500.css";
+@import "@fontsource/open-runde/600.css";
+@import "@fontsource/open-runde/700.css";
+
+/*
+ * Shape rule: interactive pills are fully round, containers use --r-card, wells and
+ * code blocks inside them use --r-inner.
+ * Color rule: the interface is ink on neutral. Color belongs to the presets only.
+ */
+:root {
+  --bg: #f6f6f7;
+  --surface: #fdfdfd;
+  --well: #ededf0;
+  --ink: #19191c;
+  --ink-2: #57575f;
+  --ink-3: #8c8c94;
+  --line: #e3e3e7;
+  --on-ink: #fafafa;
+  --shadow: 0 1px 2px rgb(25 25 40 / 0.05), 0 10px 30px -12px rgb(25 25 40 / 0.14);
+
+  --success: #12924a;
+  --success-bg: #dcf5e4;
+  --nudge: #1f72e0;
+  --nudge-bg: #dceafe;
+  --error: #d93a2e;
+  --error-bg: #fde2df;
+  --buzz: #c97400;
+  --buzz-bg: #fdf0d2;
+  --warning: #b58200;
+  --warning-bg: #fbf3cf;
+  --soft: #c53f86;
+  --soft-bg: #fbe1ef;
+  --rigid: #6e48d6;
+  --rigid-bg: #ebe4fc;
+  --selection: #0b8b99;
+  --selection-bg: #d6f2f4;
+  --neutral: #4b4b53;
+  --neutral-bg: #e9e9ed;
+
+  --r-card: 22px;
+  --r-inner: 14px;
+  --font: "Open Runde", ui-rounded, "SF Pro Rounded", system-ui, sans-serif;
+  --font-code: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --page: 1120px;
+  --gutter: 20px;
+
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0e0e11;
+    --surface: #17171b;
+    --well: #212127;
+    --ink: #f2f2f4;
+    --ink-2: #a5a5ad;
+    --ink-3: #6d6d75;
+    --line: #2a2a31;
+    --on-ink: #121215;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 12px 30px -14px rgb(0 0 0 / 0.6);
+
+    --success: #54d987;
+    --success-bg: rgb(52 199 89 / 0.15);
+    --nudge: #6aaeff;
+    --nudge-bg: rgb(10 132 255 / 0.17);
+    --error: #ff7468;
+    --error-bg: rgb(255 69 58 / 0.16);
+    --buzz: #ffb547;
+    --buzz-bg: rgb(255 159 10 / 0.16);
+    --warning: #ffd459;
+    --warning-bg: rgb(255 204 0 / 0.13);
+    --soft: #ff82be;
+    --soft-bg: rgb(255 55 150 / 0.15);
+    --rigid: #b89bff;
+    --rigid-bg: rgb(150 110 255 / 0.17);
+    --selection: #5adbe6;
+    --selection-bg: rgb(40 200 215 / 0.14);
+    --neutral: #c9c9d1;
+    --neutral-bg: rgb(255 255 255 / 0.07);
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+button,
+a,
+[role="button"],
+[role="tab"],
+[role="slider"] {
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* Icons never take the tap; the control around them does. */
+button svg,
+a svg {
+  pointer-events: none;
+  flex: none;
+}
+
+code,
+pre {
+  font-family: var(--font-code);
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+/* Page container and section rhythm. */
+.page {
+  width: 100%;
+  max-width: calc(var(--page) + var(--gutter) * 2);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+.section {
+  padding-block: 56px;
+}
+
+.section-title {
+  font-size: clamp(1.55rem, 3.2vw, 2.1rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.12;
+}
+
+.section-lede {
+  margin-top: 10px;
+  max-width: 56ch;
+  font-size: 1.02rem;
+  color: var(--ink-2);
+}
+
+.stack {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+
+/* Sections fade up the first time they scroll into view (see useReveal). */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 600ms var(--ease-out), transform 600ms var(--ease-out);
+}
+
+.reveal[data-shown="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --gutter: 32px;
+  }
+
+  .section {
+    padding-block: 72px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}

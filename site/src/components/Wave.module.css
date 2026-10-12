@@ -1,0 +1,38 @@
+.wave {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 40px;
+  pointer-events: none;
+}
+
+.base,
+.lit {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.base path,
+.lit path {
+  fill: none;
+  stroke: var(--tone, var(--ink));
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.base path {
+  stroke-width: 1.6;
+  opacity: 0.38;
+}
+
+.lit {
+  opacity: 0;
+}
+
+.lit path {
+  stroke-width: 2.4;
+}

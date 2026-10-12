@@ -1,0 +1,298 @@
+.builder {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+  margin-top: 28px;
+  padding: 14px;
+  border-radius: calc(var(--r-card) + 8px);
+  background: var(--surface);
+  box-shadow: var(--shadow), 0 0 0 1px var(--line);
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+/* Runs under a fade on the right, so a cut-off chip reads as "scroll for more". */
+.presets {
+  display: flex;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+  padding-right: 24px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  mask-image: linear-gradient(to right, #000 calc(100% - 32px), transparent);
+}
+
+.presets::-webkit-scrollbar {
+  display: none;
+}
+
+.preset {
+  flex: none;
+  height: 32px;
+  padding: 0 13px;
+  border-radius: 999px;
+  background: var(--well);
+  color: var(--ink-2);
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: background 150ms var(--ease-out), color 150ms var(--ease-out), transform 120ms var(--ease-out);
+}
+
+.preset[aria-pressed="true"] {
+  background: var(--tone-bg);
+  color: var(--tone);
+}
+
+.preset:active {
+  transform: scale(0.95);
+}
+
+.play {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 16px 0 14px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--on-ink);
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: transform 120ms var(--ease-out), opacity 150ms var(--ease-out);
+}
+
+.play:active {
+  transform: scale(0.96);
+}
+
+.play:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.length {
+  font-family: var(--font-code);
+  font-size: 0.78rem;
+  font-weight: 500;
+  opacity: 0.6;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .preset:hover {
+    color: var(--ink);
+  }
+
+  .preset[aria-pressed="true"]:hover {
+    color: var(--tone);
+  }
+
+  .play:not(:disabled):hover {
+    opacity: 0.9;
+  }
+}
+
+.track {
+  position: relative;
+  height: 104px;
+  border-radius: var(--r-inner);
+  background: var(--well);
+  overflow: hidden;
+  touch-action: none;
+  cursor: copy;
+}
+
+.gridline {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: color-mix(in srgb, var(--ink) 8%, transparent);
+  pointer-events: none;
+}
+
+.playhead {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -1px;
+  width: 2px;
+  background: var(--ink);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--well) 85%, transparent);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.block {
+  position: absolute;
+  top: 12px;
+  bottom: 12px;
+  min-width: 10px;
+  cursor: grab;
+  touch-action: none;
+}
+
+.block:active {
+  cursor: grabbing;
+}
+
+/* The outline is the pulse's time; the filled part is its intensity. */
+.body {
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--ink) 10%, transparent);
+  overflow: hidden;
+  pointer-events: none;
+  transition: box-shadow 150ms var(--ease-out);
+}
+
+.block[data-selected="true"] .body {
+  box-shadow: inset 0 0 0 2px var(--ink);
+}
+
+.fill {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--ink);
+  opacity: 0.82;
+  pointer-events: none;
+  transition: height 120ms var(--ease-out);
+}
+
+.handle {
+  position: absolute;
+  top: -8px;
+  bottom: -8px;
+  left: 100%;
+  width: 18px;
+  cursor: ew-resize;
+  display: none;
+}
+
+.block[data-selected="true"] .handle {
+  display: block;
+}
+
+.handle::after {
+  content: "";
+  position: absolute;
+  top: 30%;
+  bottom: 30%;
+  left: 4px;
+  width: 4px;
+  border-radius: 2px;
+  background: var(--ink);
+}
+
+.axis {
+  position: relative;
+  height: 18px;
+  margin-top: 6px;
+  font-family: var(--font-code);
+  font-size: 0.68rem;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.axis span {
+  position: absolute;
+  transform: translateX(-50%);
+}
+
+.axis span:first-child {
+  transform: none;
+}
+
+.axis span:last-child {
+  transform: translateX(-100%);
+}
+
+.lower {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+
+.controls {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  padding: 4px 6px;
+}
+
+.slider {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr) 52px;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.slider output {
+  text-align: right;
+  font-family: var(--font-code);
+  font-size: 0.78rem;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.slider input {
+  width: 100%;
+  accent-color: var(--ink);
+}
+
+.remove {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  margin-top: 2px;
+  padding: 0 14px 0 12px;
+  border-radius: 999px;
+  background: var(--well);
+  color: var(--ink-2);
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: color 150ms var(--ease-out), transform 120ms var(--ease-out);
+}
+
+.remove:active {
+  transform: scale(0.96);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .remove:hover {
+    color: var(--error);
+  }
+}
+
+.hint {
+  padding: 4px 6px;
+  font-size: 0.92rem;
+  color: var(--ink-2);
+}
+
+@media (min-width: 900px) {
+  .builder {
+    padding: 18px;
+  }
+
+  .lower {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 24px;
+  }
+}
